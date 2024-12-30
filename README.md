@@ -25,8 +25,9 @@ To ensure that each participant has the correct structure to complete each step,
 1. **Setup your Development environment**:
 
     You have a couple of options when it comes to setting up a working development environment required to run this workshop.
-    1. Install terraform, terramate on directly on your host machine (if you havent already) 🙈
+    1. Install terraform, terramate on directly on your host machine (*if you havent already*) 🙈
     2. Setup using Devbox using the included `devbox.json` file. [Getting started with Devbox](https://www.jetify.com/docs/devbox/quickstart/) 🖖🏼
+    3. Run in a DevContainer using the included `.devcontainer/devcontainer.json` and `Dockerfile` in VSCode or using a tool like [Devpod](https://devpod.sh/docs/getting-started/install) (*advanced usage - requiring a container runtime installed and more configuration*) 🐳
 
 To switch to the appropriate branch for each part of the workshop, use the following commands:
 
