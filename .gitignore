@@ -1,0 +1,7 @@
+.devbox
+devbox.lock
+
+.terraform/
+.terraform.d
+terraform.tfstate
+terraform.tfstate.backup
