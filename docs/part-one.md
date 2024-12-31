@@ -4,9 +4,9 @@ In this part, you will learn how to integrate Terramate into your current Terraf
 
 ## Instructions
 
-Say you have a live terraform production environment, with resources deployed in two accounts over two regions. Lets see how easy it is to let `Terramate` manage the different states
+Say you have a live terraform production environment, with resources deployed in one account over two regions. Lets see how easy it is to let `Terramate` manage the different states
 
-#### Create Stacks
+#### Initilize Stacks
 
 <https://terramate.io/docs/cli/reference/cmdline/create>
 
@@ -44,6 +44,20 @@ Now you can list Stacks by Tags
 terramate list --tags aws:vpc
 ```
 
+#### Create Stacks
+
+Create a security groups stack
+
+```bash
+terramate create live/prod/account-a/eu-north-1/security-groups 
+```
+
+Clone the stack to another region
+
+```bash
+terramate experimental clone live/prod/account-a/eu-north-1/security-groups live/prod/account-a/eu-central-1/security-groups
+```
+
 Add any other tags to the other stacks ...
 
 #### Run Commands
@@ -53,14 +67,28 @@ Add any other tags to the other stacks ...
 Run an arbitary command agaist all stacks
 
 ```bash
-terramate run -- pwd
+terramate run -- pwd 
 ```
 
-Or just against stacks with certain tags
+Since its most likely that you have made changes that are uncommitted and untracked you will need to run these commands with [disabled safeguards](https://terramate.io/docs/cli/orchestration/safeguards) or just commit your changes.
 
 ```bash
-terramate run --tags aws:vpc -- pwd
+terramate run --disable-safeguards=all -- pwd
 ```
+
+You can also run against stacks with certain tags
+
+```bash
+terramate run --tags aws:vpc --disable-safeguards=all -- pwd
+```
+
+The most useful feature is the ability to run against stacks that only have actually been changed
+
+```bash
+terramate run --disable-safeguards=all --changed -- pwd
+```
+
+This feature is hard to present unless you actually commit and push changes to the main branch
 
 ---
 
