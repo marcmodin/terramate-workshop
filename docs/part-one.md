@@ -88,7 +88,7 @@ The most useful feature is the ability to run against stacks that only have actu
 terramate run --disable-safeguards=all --changed -- pwd
 ```
 
-This feature is hard to present unless you actually commit and push changes to the main branch. You can see that there are unmerged changes like so.
+This feature is hard to present unless you actually commit and push changes to the main branch. You can see that there are unmerged changes like so. You will explore changed stacks in a later part.
 
 ```bash
 terramate list --changed --why
