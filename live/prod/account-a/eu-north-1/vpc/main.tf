@@ -1,1 +1,1 @@
-resource "terraform_data" "vpc-a-en1" {}
+resource "terraform_data" "vpc" {}
