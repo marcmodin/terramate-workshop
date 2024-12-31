@@ -10,7 +10,7 @@ Imagine you have a live terraform production environment, with mulitiple stacks 
 
 There are a few files that we could potentially generate instead having them statically defined. `terraform.tf` which includes the required terraform version, `providers.tf` and the `backend.tf`.
 
-If you have a look at those files you can see how cumbersome it would be in a large environement to update them everywhere.
+If you have a look at those files you can see how cumbersome it would be in a large environment to update them everywhere.
 
 #### Show Currently Calculated Values
 
