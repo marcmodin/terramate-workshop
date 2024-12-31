@@ -1,1 +1,1 @@
-resource "terraform_data" "vpc-a-ec1" {}
+resource "null_resource" "vpc-a-ec1" {}
