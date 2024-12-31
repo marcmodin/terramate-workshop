@@ -1,8 +1,3 @@
-# Manages the import of globally genrated configuirations
-import {
-  source = "mixins/*.tm.hcl"
-}
-
 # Configure default Terraform version in all stacks
 globals "terraform" {
   version = "1.9.5"
