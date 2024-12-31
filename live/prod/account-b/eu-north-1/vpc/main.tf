@@ -1,0 +1,1 @@
+resource "terraform_data" "vpc-b-en1" {}
