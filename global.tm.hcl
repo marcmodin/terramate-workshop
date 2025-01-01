@@ -14,9 +14,13 @@ globals "terraform" "backend" {
   region = "eu-north-1"
 }
 
-# Will be added to all stacks
+# Will be added to all stacks unless overridden
 globals "terraform" "providers" "aws" {
   source  = "hashicorp/aws"
   version = "5.82.2"
   enabled = true
+  # Set the default region for the AWS provider
+  config = {
+    region = "eu-north-1"
+  }
 }
