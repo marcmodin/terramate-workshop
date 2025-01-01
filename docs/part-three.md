@@ -2,13 +2,14 @@
 
 In this part, you will set up a larger-scale Terraform monorepo that builds on part-2, leveraging Terramate's powerful orchestration capabilities, create reusable modules with code generation and see how its like to work with terraform.
 
+From now on we will not disable safeguards which means you will need to git add your changes. At the end of this part you will merge your changes back to main so that we can test our Terramate's [change detection](https://terramate.io/docs/cli/change-detection/). That's why it is important that you are working off your own fork of this repository.
+
 ## Instructions
 
-> From now on we will not disable safeguards which means you will need to add and commit your changes
-
-If you plan to run terraform commands while following along, you will need to change the account_id to an account that you have access to at `live/prod/account-a/account.tm.hcl`, as well as setting your AWS credentials with permissions in that account.
+✅ If you plan to run terraform commands while following along, you will need to change the `account_id` to an account that you have access to, as well as setting your AWS credentials session with permissions for that account.
 
 ```bash
+# live/prod/account-a/account.tm.hcl
 
 globals "aws" {
   name       = "account-a"
@@ -22,11 +23,13 @@ globals "aws" {
 
 #### Boostrap Remote State
 
-You will need to have remote-state s3 backend to be able to run terraform commands. The stack located in `live/prod/account-a/boostrap` generates the module code that you can deploy (remember to change the account_id)
+You will need to have remote-state s3 backend to be able to run terraform commands with a remote-backend configuration.
 
-Here we use an experimental feature called `tmgen` (well, not so experimental anymore!). The experimental feature have already been added to `terramate.tm.hcl`. <https://terramate.io/docs/cli/code-generation/tmgen#example>
+The stack located in `live/prod/account-a/boostrap` generates the module code that you can deploy (remember to change the account_id).
 
-Run Generate
+Here we use an experimental feature `tmgen` (well, not so experimental anymore!). The experimental feature have already been added to `terramate.tm.hcl`. <https://terramate.io/docs/cli/code-generation/tmgen#example>
+
+Review the `main.tf.tmgen` file and generate the code.
 
 ```bash
 terramate generate
@@ -35,7 +38,7 @@ git add .
 git commit -m "feat: deploy remote-state bucket to prod account-a"
 ```
 
-Deploy the remote state bucket specifically using orchestration. Specifically `workflows` <https://terramate.io/docs/cli/orchestration/scripts>
+Deploy the remote state bucket specifically using orchestration. <https://terramate.io/docs/cli/orchestration/scripts>
 
 We can deploy the remote-state either using scripts or inline using the following command (-chdir can be replaced with --tags bootstrap:remote-state).
 
@@ -46,7 +49,7 @@ terramate --chdir live/prod/account-a/bootstrap/remote-state run -- sh -c '
   '
 ```
 
-> Thought, why not have a terramate script - which creates the bucket > removes the no-backend tag > generates _backend.tf and reinitializes the state using the new backend 🧠
+> Thought! why not have a terramate script - which creates the bucket > removes the no-backend tag > generates _backend.tf and reinitializes the state using the new backend 🧠
 
 #### Order of execution
 
