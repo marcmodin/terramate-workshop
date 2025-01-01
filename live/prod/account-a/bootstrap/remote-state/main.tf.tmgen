@@ -1,0 +1,5 @@
+module "remote-state" {
+  source = global.modules.remote_state.source
+  name = global.modules.remote_state.name
+  create_iam_policy = global.modules.remote_state.create_iam_policy
+}

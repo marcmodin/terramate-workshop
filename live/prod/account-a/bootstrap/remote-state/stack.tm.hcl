@@ -8,4 +8,8 @@ stack {
     "bootstrap",
     "oidc"
   ]
+
+  before = [
+    "tag:aws"
+  ]
 }
