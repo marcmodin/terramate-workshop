@@ -7,7 +7,8 @@ generate_hcl "_backend.tf" {
       backend "s3" {
         region  = global.terraform.backend.region
         bucket  = global.terraform.backend.bucket
-        key     = global.terraform.backend.key
+        #  use the stack id to create a unique key for each stack (bye bye, path collisions)
+        key     = tm_try(global.terraform.backend.key, "stacks/by-id/${terramate.stack.id}/terraform.tfstate")
         encrypt = true
       }
     }
