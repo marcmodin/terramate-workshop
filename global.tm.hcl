@@ -8,6 +8,12 @@ globals "terraform" {
   version = "1.9.5"
 }
 
+# Configure default backend in all stacks (can be overridden)
+globals "terraform" "backend" {
+  bucket = "terramate-workshop-state-bucket-${global.aws.account_id}"
+  region = "eu-north-1"
+}
+
 # Will be added to all stacks
 globals "terraform" "providers" "aws" {
   source  = "hashicorp/aws"
