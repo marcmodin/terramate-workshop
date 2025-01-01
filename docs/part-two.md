@@ -31,8 +31,7 @@ You need to include an import block in the global config (or create a new `*.tm.
 
 ```bash
 import {
-    # import all files in a directory
-    source = "/imports/*.tm.hcl"
+    source = "/<directory>/*.tm.hcl"
 }
 ```
 
@@ -45,7 +44,25 @@ terramate generate
 > In a real world scenario you would ofc remove the old files after generating new ones.
 ---
 
-Generate is pretty powerful, but could potentially become a cause of complexity and over-engineering. Eg. you could also explore the experimental feature `tmgen` <https://terramate.io/docs/cli/code-generation/tmgen#example> or figure out how to share common values files.
+Update the required terraform version and regenerate everywhere.
+
+```bash
+version = "1.9.5" >  "1.10.0"
+```
+
+If you wanted to perform the version update only in eg. `eu-north-1` first, you can add the following to an existing `*.tm.hcl` or create a new config.
+
+```bash
+# eg. /live/prod/eu-north-1/region.tm.hcl
+
+globals "terraform" {
+  version = "1.10.0"
+}
+```
+
+Generate is pretty powerful, but could potentially become a cause of complexity and over-engineering.
+
+If you want to take things further. You could also explore the experimental feature `tmgen` <https://terramate.io/docs/cli/code-generation/tmgen#example> (will be covered in part-3) or figure out how to share common values files on your own.
 
 ### Proceed to the Next Step
 
