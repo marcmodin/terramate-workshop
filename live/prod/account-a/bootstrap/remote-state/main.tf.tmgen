@@ -1,5 +1,5 @@
 module "remote-state" {
-  source = global.modules.remote_state.source
-  name = global.modules.remote_state.name
-  create_iam_policy = global.modules.remote_state.create_iam_policy
+  source = "github.com/marcmodin/random-terraform-aws-remote-state-module.git?ref=main"
+  name = global.terraform.backend.bucket # Get the bucket name from the global backend values file
+  create_iam_policy = false
 }

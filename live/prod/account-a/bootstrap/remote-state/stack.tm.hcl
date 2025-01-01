@@ -6,7 +6,7 @@ stack {
   tags = [
     "no-backend",
     "bootstrap",
-    "oidc"
+    "remote-state"
   ]
 
   before = [
