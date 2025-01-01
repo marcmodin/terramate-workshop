@@ -16,6 +16,10 @@ globals "aws" {
 }
 ```
 
+### Orchestration
+
+<https://terramate.io/docs/cli/orchestration/>
+
 #### Boostrap Remote State
 
 You will need to have remote-state s3 backend to be able to run terraform commands. The stack located in `live/prod/account-a/boostrap` generates the module code that you can deploy (remember to change the account_id)
@@ -26,11 +30,14 @@ Run Generate
 
 ```bash
 terramate generate
+# add and commit changes
+git add .
+git commit -m "feat: deploy remote-state bucket to prod account-a"
 ```
 
 Deploy the remote state bucket specifically using orchestration. Specifically `workflows` <https://terramate.io/docs/cli/orchestration/scripts>
 
-We can deploy the remote-state either using scripts or directly using the following command
+We can deploy the remote-state either using scripts or inline using the following command (-chdir can be replaced with --tags bootstrap:remote-state).
 
 ```bash
 terramate --chdir live/prod/account-a/bootstrap/remote-state run -- sh -c '
@@ -39,13 +46,9 @@ terramate --chdir live/prod/account-a/bootstrap/remote-state run -- sh -c '
   '
 ```
 
-```bash
-terramate --chdir path/to/tree run -- 
-```
+> Thought, why not have a terramate script - which creates the bucket > removes the no-backend tag > generates _backend.tf and reinitializes the state using the new backend 🧠
 
-### Orchestration
-
-<https://terramate.io/docs/cli/orchestration/>
+#### Order of execution
 
 Controlling the order of execution. Add the following to the `security-group` stack block to ensure that it always run after the `vpc` stack. <https://terramate.io/docs/cli/stacks/configuration#explicit-order-of-execution>
 
