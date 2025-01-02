@@ -142,10 +142,12 @@ terramate list --run-order
    Verify that Terramate detects the newly added stack.
 
    ```bash
-   terramate list --changed --why
+   terramate list --changed
    ```
 
    You should see the new stack listed as changed, indicating that Terramate recognizes the addition.
+
+3. **Apply the stack and commit and merge your changes back to main**
 
 ## Next Step
 
