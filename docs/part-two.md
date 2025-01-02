@@ -1,75 +1,78 @@
 # Part 2: Refactor Terraform and Introduce Code Generation
 
-In this part, you will organize and refactor your Terraform codebase for better maintainability and scalability, and use Terramate to generate Terraform configurations dynamically.
+In this section, you'll organize and refactor your Terraform codebase for better maintainability and scalability. You'll also use Terramate to dynamically generate Terraform configurations.
 
 ## Instructions
 
-Imagine you have a live terraform production environment, with mulitiple stacks deployed to one account over two regions. You need to ensure that terraform and provider version constraints can be centrally updated and that new stacks will have correctly configured backends (the state bucket don't exist yet).
+Assume you have a live Terraform production environment with multiple stacks deployed to one account across two regions. You need to centrally update Terraform and provider version constraints and ensure new stacks have correctly configured backends (state buckets don't exist yet).
 
 ---
 
-There are a few files that we could potentially generate instead having them statically defined. `terraform.tf` which includes the required terraform version, `providers.tf` and the `backend.tf`.
+Instead of statically defining files like `terraform.tf`, `providers.tf`, and `backend.tf`, you can generate them to simplify updates across a large environment.
 
-If you have a look at those files you can see how cumbersome it would be in a large environment to update them everywhere.
+### Show Currently Calculated Values
 
-#### Show Currently Calculated Values
-
-You can view all values terramate will know about for each stack. Valid commands `generate-origins`, `globals`, `metadata`, `runtime-env` <https://terramate.io/docs/cli/reference/cmdline/debug/show/debug-show-globals>
+View all values Terramate recognizes for each stack. Valid commands include `generate-origins`, `globals`, `metadata`, and `runtime-env`.
 
 ```bash
 terramate debug show globals
 terramate debug show metadata --tags aws:vpc
 ```
 
-#### Generate
+### Generate Configurations
 
-Included in the `mixins` directory are a couple of files that contains `generate_hcl` block. <https://terramate.io/docs/cli/code-generation/generate-hcl>
+<https://terramate.io/docs/cli/code-generation/generate-hcl>
 
-You will also find various config files representing `environment`, `account` and `region` values that will be used when terramate generates hcl, as well as global config `global.tm.hcl` at the root of the directory (terramate doesnt dictate how to stucture your configurations, unlike terragrunt).
+In the `mixins` directory, you'll find files with `generate_hcl` blocks. Additionally, various config files represent `environment`, `account`, and `region` values used by Terramate to generate HCL. The global config `global.tm.hcl` is located at the root directory.
 
-You need to include an import block in the global config (or create a new `*.tm.hcl` file in root)
+Include an import block in the global config or create a new `*.tm.hcl` file in the root:
 
-```bash
+```hcl
 import {
     source = "/<directory>/*.tm.hcl"
 }
 ```
 
-Run generate and check the newly created files.
+Run the generate command and verify the newly created files:
 
 ```bash
 terramate generate
 ```
 
-> In a real world scenario you would ofc remove the old files after generating new ones.
+> **Note:** In a real-world scenario, remove the old files after generating new ones.
+
 ---
 
-Update the required terraform version and regenerate everywhere.
+### Update Terraform Version
 
-```bash
-version = "1.9.5" >  "1.10.0"
+Update the required Terraform version and regenerate configurations:
+
+```hcl
+version = "1.9.5" > "1.10.0"
 ```
 
-If you wanted to perform the version update only in eg. `eu-north-1` first, you can add the following to an existing `*.tm.hcl` or create a new config.
+To update the version only in a specific region (e.g., `eu-north-1`), add the following to an existing `*.tm.hcl` or create a new config:
 
-```bash
-# eg. /live/prod/eu-north-1/region.tm.hcl
+```hcl
+# e.g., /live/prod/eu-north-1/region.tm.hcl
 
 globals "terraform" {
   version = "1.10.0"
 }
 ```
 
-Generate is pretty powerful, but could potentially become a cause of complexity and over-engineering.
+### Considerations
 
-If you want to take things further. You could also explore the experimental feature `tmgen` <https://terramate.io/docs/cli/code-generation/tmgen#example> (will be covered in part-3) or figure out how to share common values files on your own.
+> While Terramate's generate feature is powerful, it can introduce complexity and potential over-engineering.
 
-### Proceed to the Next Step
+For advanced usage, explore the experimental `tmgen` feature or develop your own methods to share common values files. <https://terramate.io/docs/cli/code-generation/tmgen#example>
 
-Once you have completed Part 2, proceed to Part 3 by checking out the next tag:
+## Next Step
 
-```sh
+After completing Part 2, proceed to Part 3:
+
+```bash
 git checkout part-3
 ```
 
-Great progress so far .. 🚀
+Great progress so far! 🚀
