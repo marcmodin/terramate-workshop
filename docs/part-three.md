@@ -1,96 +1,158 @@
 # Part 3: Orchestrate a Multi-Account Monorepo with Code Generation and Reusable Modules
 
-In this part, you will set up a larger-scale Terraform monorepo that builds on part-2, leveraging Terramate's powerful orchestration capabilities, create reusable modules with code generation and see how its like to work with terraform.
+In this section, you'll set up a scalable Terraform monorepo, leveraging Terramate's orchestration capabilities. You'll create reusable modules with code generation and experience working with Terraform in a multi-region environment.
 
-From now on we will not disable safeguards which means you will need to git add your changes. At the end of this part you will merge your changes back to main so that we can test out Terramate's [change detection](https://terramate.io/docs/cli/change-detection/). That's why it is important that you are working off your own fork of this repository.
+> [!IMPORTANT]
+> From now on, safeguards are enabled. Ensure you `git commit` your changes and work on your own repository fork. At the end of this part, you'll merge changes back to main to test Terramate's [change detection](https://terramate.io/docs/cli/change-detection/).
 
 ## Instructions
 
-✅ If you plan to run terraform commands while following along, you will need to change the `account_id` to an account that you have access to, as well as setting your AWS credentials session with permissions for that account.
+### Setup AWS Account Configuration
 
-```bash
+If you plan to run Terraform commands, update the `account_id` to an AWS account you own and set your AWS credentials with appropriate permissions.
+
+```hcl
 # live/prod/account-a/account.tm.hcl
 
 globals "aws" {
   name       = "account-a"
-  account_id = "?"
+  account_id = "YOUR_ACCOUNT_ID"
 }
 ```
 
 ### Orchestration
 
-<https://terramate.io/docs/cli/orchestration/>
+Learn more about orchestration [here](https://terramate.io/docs/cli/orchestration/).
 
-#### Boostrap
+#### Bootstrap
 
-You will need to have remote-state s3 backend to be able to run terraform commands with a remote-backend configuration.
+1. **Configure Remote State Backend:**
 
-The stack located in `live/prod/account-a/boostrap` generates the module code that you can deploy (remember to change the account_id). We can't add a backend config until we have deployed the remote-state. So we've included `no-backend` tag to the stack config which tells `mixins/backend.tm.hcl` to ignore this stack.
+   Ensure you have an S3 backend for remote state. The `live/prod/account-a/bootstrap` stack generates the module code. The `no-backend` tag in the stack config instructs `mixins/backend.tm.hcl` to ignore this stack until the backend is deployed.
 
-To dynamically generate the module for remote-state we use an experimental feature `tmgen`. The experimental feature have already been added to `terramate.tm.hcl`. <https://terramate.io/docs/cli/code-generation/tmgen#example>
+  > [!WARNING]
+  > Remember to update `account_id` as needed
 
-Review the `main.tf.tmgen` file and generate.
+2. **Generate Module Code:**
 
-```bash
-terramate generate
-# add and commit changes
-git add .
-```
+   Use the experimental `tmgen` feature to generate remote-state modules. This feature is pre-configured in `terramate.tm.hcl`. <https://terramate.io/docs/cli/code-generation/tmgen#example>
+
+   ```bash
+   terramate generate
+   git add .
+   ```
 
 #### Deploy Remote State
 
-Use terramate to provision the remote state bucket specifically using orchestration. <https://terramate.io/docs/cli/orchestration/scripts>
+1. **Provision Remote State Bucket:**
 
-1. We can apply the remote-state using either scripts or inline with following command.
+   Deploy the remote state using orchestration scripts. <https://terramate.io/docs/cli/orchestration/scripts>
 
-```bash
-terramate --chdir live/prod/account-a/bootstrap/remote-state run -- sh -c '
-  terraform init &&
-  terraform apply -input=false -auto-approve
-  '
-```
+   ```bash
+   terramate --chdir live/prod/account-a/bootstrap/remote-state run -- sh -c '
+     terraform init &&
+     terraform apply -input=false -auto-approve
+   '
+   ```
 
-2. Remove the `no-backend` tag from the stack and regenerate to create the `_backend.tf`.
+2. **Update Backend Configuration:**
 
-3. Reinitilize terraform to push the remote-state state to s3
+   Remove the `no-backend` tag from the stack and regenerate the backend configuration.
 
-```bash
-terramate --chdir live/prod/account-a/bootstrap/remote-state run -- terraform init -migrate-state
+   ```bash
+   terramate generate
+   ```
 
-# add and commit changes
-git add .
-git commit -m "feat: deploy remote-state bucket to prod account-a"
-```
+3. **Reinitialize Terraform:**
 
-> 🧠 Idea. Why not have a terramate script command - which creates the bucket > removes the no-backend tag > generates backend config and reinitializes the state using the new backend!
+   Push the state to the newly created S3 backend.
 
-### Order of execution
+   ```bash
+   terramate --chdir live/prod/account-a/bootstrap/remote-state run -- terraform init -migrate-state
 
-Controlling the order of execution. Add the following to the `security-group` stack block to ensure that it always run after the `vpc` stack. <https://terramate.io/docs/cli/stacks/configuration#explicit-order-of-execution>
+   git add .
+   git commit -m "feat: deploy remote-state bucket to prod account-a"
+   ```  
 
-```bash
+  > [!TIP]
+  > Consider creating a Terramate script to automate bucket creation, tag removal, backend generation, and state reinitialization 🧠
 
+### Order of Execution
+
+Control the execution order of stacks. Ensure the `security-group` stack runs after the `vpc` stack by adding the `after` attribute. <https://terramate.io/docs/cli/stacks/configuration#explicit-order-of-execution>
+
+```hcl
 stack {
   ...
-
   after = [
     "tag:vpc",
   ]
 }
 ```
 
-Check the order of execution
+Verify the execution order:
 
 ```bash
 terramate list --run-order
 ```
 
-### Proceed to the Next Step
+### Initialize and Deploy Other Stacks
 
-Once you have completed Part 3, proceed to Part 4 by checking out the next tag:
+1. **Initialize All Other Stacks:**
 
-```sh
+   Initialize all stacks except the `bootstrap` stack to prepare them for deployment.
+
+   ```bash
+   terramate --no-tags bootstrap run -- terraform init
+   ```
+
+2. **Plan and Apply All Other Stacks:**
+
+   Execute a Terraform plan and apply for all stacks except `bootstrap`.
+
+   ```bash
+   terramate --no-tags bootstrap run -- terraform plan
+   terramate --no-tags bootstrap run -- terraform apply -auto-approve
+   ```
+
+3. **Commit and Merge Changes Back to Main:**
+
+   After successfully deploying, commit your changes and merge them back to the main branch to ensure the remote repository is up-to-date.
+
+   ```bash
+   git add .
+   git commit -m "chore: initialize and deploy all stacks except bootstrap"
+   git checkout main
+   git merge your-feature-branch
+   git push origin main
+   ```
+
+### Test Change Detection
+
+1. **Add a New Stack:**
+
+   To test Terramate's change detection, add a new stack to your monorepo.
+
+   ```bash
+   terramate create live/prod/account-a/eu-north-1/ec2
+   ```
+
+2. **List Changed Stacks:**
+
+   Verify that Terramate detects the newly added stack.
+
+   ```bash
+   terramate list --changed --why
+   ```
+
+   You should see the new stack listed as changed, indicating that Terramate recognizes the addition.
+
+## Next Step
+
+After completing Part 3, proceed to Part 4:
+
+```bash
 git checkout part-4
 ```
 
-Nice seeing you are still here .. 🖖🏼
+Great job making it this far! 🖖🏼
