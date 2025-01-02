@@ -4,8 +4,7 @@
     "terraform@1.9.5",
     "terramate@0.11.5",
     "git@latest",
-    "awscli2@latest",
-    "terragrunt@0.71.1"
+    "awscli2@latest"
   ],
   "shell": {
     "init_hook": [
