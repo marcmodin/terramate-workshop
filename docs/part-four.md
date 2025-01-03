@@ -1,11 +1,19 @@
 # Part 4: Implement CI/CD with GitHub Actions
 
-In this final section, you'll manage your Terraform environment by adding new stacks, allowing Terramate to perform actions only on changed stacks, opening pull requests, and using GitHub Actions to apply your changes. This automation ensures that your infrastructure updates are efficiently tested and deployed.
+In this section, you'll manage your Terraform environment by adding new stacks, opening a pull-request, and using GitHub Actions allowing Terramate to perform plan and apply only on changed stacks. This automation ensures that your infrastructure updates are efficiently tested and deployed.
 
 > [!IMPORTANT]
-> Safeguards are enabled. Ensure you `git commit` your changes and work on your own repository fork. At the end of this part, you'll merge changes back to main to test Terramate's [change detection](https://terramate.io/docs/cli/change-detection/).
+> Safeguards are enabled. Ensure you `git commit` your changes and work on your own repository. At the end of this part, you'll merge changes back to main to test Terramate's [change detection](https://terramate.io/docs/cli/change-detection/).
 
 ## Instructions
+
+### Update Your Branch with Main
+
+Before starting Part 4, ensure your feature branch is up-to-date with the latest changes from the `main` branch.
+
+```bash
+git merge main
+```
 
 ### Review Workflow Files
 
@@ -17,10 +25,8 @@ The plan workflow includes the following steps:
 
 ```yaml
 - Checkout Repository: Retrieves the latest code from the repository.
-- Setup Terraform: Installs the specified Terraform version.
-- Install Terramate: Downloads and installs the Terramate CLI.
+- Install Dependencies: Installs required dependencies defined in 'devbox.json'
 - Configure AWS Credentials: Sets up AWS credentials using secrets or OIDC.
-- Terramate Generate: Generates Terraform configurations using Terramate.
 - Terramate Init: Initializes Terraform with Terramate orchestration.
 - Terramate Plan: Creates an execution plan for Terraform changes.
 ```
@@ -85,9 +91,9 @@ If you prefer using an OpenID Connect (OIDC) provider for enhanced security:
 
 ### Terramate Scenario
 
-Assuming that you are managing multiple Terraform stacks across different environments and regions, this can become complex. Terramate simplifies this by orchestrating actions only on the stacks that have changed, ensuring efficient and reliable deployments without the need to run terraform commands across all your stacks for every change.
+Assuming that you are managing multiple Terraform stacks across different environments and regions. Terramate simplifies this by orchestrating actions only on the stacks that have changed. Ensure that Github Actions use change-detection to plan and apply.
 
-### 5. Add a New Stack
+### Add a New Stack
 
 Create a new stack anywhere you like or clone an existing one.
 
@@ -95,7 +101,7 @@ Create a new stack anywhere you like or clone an existing one.
 terramate create live/prod/eu-central-1/ec2
 ```
 
-### 6. Generate the Code
+### 1. Generate the Code
 
 Generate the necessary Terraform configurations using Terramate.
 
@@ -103,7 +109,7 @@ Generate the necessary Terraform configurations using Terramate.
 terramate generate
 ```
 
-### 7. Review Changed Stacks
+### 2. Review Changed Stacks
 
 Verify that only the new changes are detected by listing the changed stacks.
 
@@ -111,16 +117,7 @@ Verify that only the new changes are detected by listing the changed stacks.
 terramate list --changed
 ```
 
-### 8. Perform Terraform Linting and Formatting
-
-Ensure your Terraform code adheres to best practices by running linting and formatting scripts provided in the `scripts` folder.
-
-```bash
-terramate run -- scripts/lint.sh
-terramate run -- scripts/format.sh
-```
-
-### 9. Add and Commit Changes, Create Pull Request
+### 3. Add and Commit Changes, Create Pull Request
 
 Commit your changes and push them to your feature branch. Then, create a pull request to merge your changes into the `main` branch.
 
@@ -139,7 +136,7 @@ git push origin your-feature-branch
    - The workflow will automatically run on the pull request, performing Terramate and Terraform operations.
    - Monitor the **Actions** tab to ensure the workflow completes successfully.
 
-### 10. Approve and Merge Pull Request
+### 4. Approve and Merge Pull Request
 
 Once the GitHub Actions workflow succeeds:
 
@@ -153,6 +150,15 @@ Once the GitHub Actions workflow succeeds:
 3. **Merge Pull Request:**
    - Merge the pull request to apply the changes to the `main` branch.
    - The workflow will trigger again to apply the Terraform changes automatically.
+4. **You are done!**
+
+---
+
+### Next Steps
+
+We have worked with a pretty simple example, but you could take this further. There is alot more to cover and we encourage you to explore the rest of the [Terramate docs](https://terramate.io/docs).
+
+Terramate opensource is pretty powerful tool as is. However they offer a cloud solution that takes infrastructure as code management to a whole other level. <https://terramate.io/docs/how-it-works>
 
 ---
 
