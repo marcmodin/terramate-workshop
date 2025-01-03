@@ -1,15 +1,15 @@
 # Part 3: Orchestrate a Multi-Account Monorepo with Code Generation and Reusable Modules
 
-In this section, you'll set up a scalable Terraform monorepo, leveraging Terramate's orchestration capabilities. You'll create reusable modules with code generation and experience working with Terraform in a multi-region environment.
+In this section, you'll work with a scalable Terraform monorepo, leveraging Terramate's orchestration capabilities. You'll create reusable modules with code generation and experience working with Terraform in a multi-region environment.
 
 > [!IMPORTANT]
-> From now on, safeguards are enabled. Ensure you `git commit` your changes and work on your own repository fork. At the end of this part, you'll merge changes back to main to test Terramate's [change detection](https://terramate.io/docs/cli/change-detection/).
+> Safeguards are enabled. Ensure you `git commit` your changes and work on your own repository. At the end of this part, you'll merge changes back to main to test Terramate's [change detection](https://terramate.io/docs/cli/change-detection/).
 
 ## Instructions
 
 ### Setup AWS Account Configuration
 
-If you plan to run Terraform commands, update the `account_id` to an AWS account you own and set your AWS credentials with appropriate permissions.
+In order for you to run Terraform commands, update the `account_id` to an AWS account you own and set your AWS credentials with appropriate permissions.
 
 ```hcl
 # live/prod/account-a/account.tm.hcl
@@ -31,7 +31,7 @@ Learn more about orchestration [here](https://terramate.io/docs/cli/orchestratio
    Ensure you have an S3 backend for remote state. The `live/prod/account-a/bootstrap` stack generates the module code. The `no-backend` tag in the stack config instructs `mixins/backend.tm.hcl` to ignore this stack until the backend is deployed.
 
   > [!WARNING]
-  > Remember to update `account_id` as needed
+  > Remember to update `account_id`
 
 2. **Generate Module Code:**
 
@@ -124,7 +124,6 @@ terramate list --run-order
    git commit -m "chore: initialize and deploy all stacks except bootstrap"
    git checkout main
    git merge your-feature-branch
-   git push origin main
    ```
 
 ### Test Change Detection
@@ -145,7 +144,7 @@ terramate list --run-order
    terramate list --changed
    ```
 
-   You should see the new stack listed as changed, indicating that Terramate recognizes the addition.
+   You should see the new stack listed as changed, indicating that Terramate recognizes the addition. You won't need this stack so you can undo your changes before continuing.
 
 3. **Apply the stack and commit and merge your changes back to main**
 
@@ -154,7 +153,7 @@ terramate list --run-order
 After completing Part 3, proceed to Part 4:
 
 ```bash
-git checkout part-4
+git checkout workshop/part-4
 ```
 
 Great job making it this far! 🖖🏼

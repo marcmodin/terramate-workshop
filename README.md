@@ -25,46 +25,53 @@ In this workshop, you will:
 
 To ensure that each participant has the correct structure to complete each step, the required files and directories for each part of the workshop are contained in their own branch within the git repository.
 
-> [!IMPORTANT]
-> You must fork this repository if you plan to actively follow along.
+1. **Use this template**
 
-1. **Setup your Development environment**:
+    This repository is a template and you need to create a new repository in your own Gitub account based on it, [creating-a-repository-from-a-template](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
+
+> [!IMPORTANT]
+> Make sure that you select `Include all branches` to include the directory structure and files from all branches in the template.
+
+2. **Setup your Development environment**:
 
     You have a couple of options when it comes to setting up a working development environment required to run this workshop.
     1. Install terraform, terramate on directly on your host machine (*if you havent already*) 🙈
     2. Setup using Devbox using the included `devbox.json` file. [Getting started with Devbox](https://www.jetify.com/docs/devbox/quickstart/) 🖖🏼
     3. Run in a DevContainer using the included `.devcontainer/devcontainer.json` and `Dockerfile` in VSCode or using a tool like [Devpod](https://devpod.sh/docs/getting-started/install) (*advanced usage - requiring a container runtime installed and more configuration*) 🐳
 
-2. **Ensure that you have access to an AWS Account**
+3. **Ensure that you have access to an AWS Account**
 
 To switch to the appropriate branch for each part of the workshop, use the following commands:
 
-3. **Add Terramate to an Existing Terraform Project**:
+> [!WARNING]
+> Since you will basically create a new git repository, all branches are considered unrelated and lack shared history between the branches. As such you need to `git merge main --allow-unrelated-histories` to merge main into the branch you are working on.
+
+4. **Add Terramate to an Existing Terraform Project**:
 
     ```sh
     git checkout workshop/part-1
     ```
 
-4. **Refactor Terraform and Introduce Code Generation**:
+5. **Refactor Terraform and Introduce Code Generation**:
 
     ```sh
     git checkout workshop/part-2
     ```
 
-5. **Orchestrate a Multi-Account Monorepo with Code Generation and Reusable Modules**:
+6. **Orchestrate a Multi-Account Monorepo with Code Generation and Reusable Modules**:
 
     ```sh
     git checkout workshop/part-3
     ```
 
-6. **Implement CI/CD with GitHub Actions**:
+7. **Implement CI/CD with GitHub Actions**:
 
     ```sh
     git checkout workshop/part-4
     ```
 
 > [!IMPORTANT]
-> Parts 3 and 4, requires you to merge you changes and create actual pull-requests.
+> Parts 3 and 4 relates to each other, requires you to merge you changes and create actual pull-requests.
 
 Each branch contains the necessary files and directory structure for that part of the workshop. Follow the instructions provided in each part to complete the workshop successfully.
 
