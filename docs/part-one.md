@@ -4,7 +4,7 @@ In this section, you'll integrate Terramate into your existing Terraform setup a
 
 ## Instructions
 
-Assume you have a live Terraform production environment with resources deployed in one account across two regions. Let's see how easily Terramate can manage different states.
+Assume you a live Terraform production environment with resources deployed in one account across two regions. Let's see how easily Terramate can manage different states.
 
 ### Initialize Stacks
 

@@ -8,7 +8,7 @@ Assume you have a live Terraform production environment with multiple stacks dep
 
 ---
 
-Instead of statically defining files like `terraform.tf`, `providers.tf`, and `backend.tf`, you can generate them to simplify updates across a large environment.
+Instead of statically defining files like `terraform.tf`, `providers.tf`, and `backend.tf`, you can generate them to simplify updates across a larger environment.
 
 ### Show Currently Calculated Values
 
@@ -39,7 +39,8 @@ Run the generate command and verify the newly created files:
 terramate generate
 ```
 
-> **Note:** In a real-world scenario, remove the old files after generating new ones.
+> [!NOTE]
+> In a real-world scenario, replace the old files with the generated new ones.
 
 ---
 
@@ -61,11 +62,11 @@ globals "terraform" {
 }
 ```
 
+For advanced usage, explore the experimental `tmgen` feature or develop your own methods using generate. <https://terramate.io/docs/cli/code-generation/tmgen#example>
+
 ### Considerations
 
-> While Terramate's generate feature is powerful, it can introduce complexity and potential over-engineering.
-
-For advanced usage, explore the experimental `tmgen` feature or develop your own methods to share common values files. <https://terramate.io/docs/cli/code-generation/tmgen#example>
+While Terramate's generate feature is powerful, you can introduce complexity and potential over-engineering. We like Terramate since it doesn't dictate how to you write or stucture your terraform unlike contemporary tools and would recommend a simplistic approach.
 
 ## Next Step
 
