@@ -1,0 +1,35 @@
+name: Terraform Plan
+
+on:
+  workflow_dispatch:
+  # pull_request:
+  #   branches:
+  #     - main
+
+jobs:
+  preview:
+    name: Plan Terraform changes in changed stacks
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write
+      checks: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Install Dependencies
+        uses: jetify-com/devbox-install-action@v0.11.0
+
+      - name: Verify Versions
+        run: |
+          terraform --version
+          terramate version
+          aws --version
+          git --version
