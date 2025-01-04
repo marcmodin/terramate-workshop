@@ -149,7 +149,7 @@ git add .
    terramate list --changed
    ```
 
-   You should see the new stack listed as changed, indicating that Terramate recognizes the addition. You won't need this stack so you can undo your changes before continuing.
+   You should see the new stack listed as changed, indicating that Terramate recognizes the addition.
 
 3. **Apply the stack and commit and merge your changes back to main**
 
