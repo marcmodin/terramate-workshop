@@ -1,14 +1,13 @@
 name: Terraform Plan
 
 on:
-  workflow_dispatch:
-  # pull_request:
-  #   branches:
-  #     - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  preview:
-    name: Plan Terraform changes in changed stacks
+  plan:
+    name: Plan Changes
     runs-on: ubuntu-latest
 
     permissions:
@@ -26,10 +25,37 @@ jobs:
 
       - name: Install Dependencies
         uses: jetify-com/devbox-install-action@v0.11.0
+        with:
+          enable-cache: true
 
-      - name: Verify Versions
+      - name: Configure Devbox Shell Environment
         run: |
-          terraform --version
-          terramate version
-          aws --version
-          git --version
+          eval "$(devbox shellenv)"
+          printenv >> $GITHUB_ENV
+
+      - name: List changed stacks
+        id: list-changed
+        run: echo "out=$(terramate list --changed)" >> $GITHUB_OUTPUT
+
+      - name: Configure AWS credentials
+        if: steps.list-changed.outputs.out
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Run Terraform Init
+        if: steps.list-changed.outputs.out
+        run: |
+          terramate run --changed -- terraform init
+
+      - name: Run Terraform Plan
+        if: steps.list-changed.outputs.out
+        run: |
+          terramate run \
+            --changed \
+            --continue-on-error \
+            --parallel 3 \
+            -- \
+            terraform plan -input=false -out=plan.tfplan

@@ -1,14 +1,13 @@
 name: Terraform Apply
 
 on:
-  workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
 
 jobs:
-  preview:
-    name: Apply Terraform changes on merge
+  apply:
+    name: Apply Changes
     runs-on: ubuntu-latest
 
     permissions:
@@ -23,3 +22,51 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
+
+      - name: Install Dependencies
+        uses: jetify-com/devbox-install-action@v0.11.0
+        with:
+          enable-cache: true
+
+      - name: Configure Devbox Shell Environment
+        run: |
+          eval "$(devbox shellenv)"
+          printenv >> $GITHUB_ENV
+
+      - name: List changed stacks
+        id: list-changed
+        run: echo "out=$(terramate list --changed)" >> $GITHUB_OUTPUT
+
+      - name: Configure AWS credentials
+        if: steps.list-changed.outputs.out
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Run Terraform Init
+        if: steps.list-changed.outputs.out
+        run: |
+          terramate run --changed -- terraform init
+
+      - name: Run Terraform Plan
+        if: steps.list-changed.outputs.out
+        run: |
+          terramate run \
+            --changed \
+            --continue-on-error \
+            --parallel 3 \
+            -- \
+            terraform plan -input=false -out=plan.tfplan
+
+      - name: Run Terraform Apply
+        if: steps.list-changed.outputs.out
+        run: |
+          terramate run \
+            --disable-safeguards=all \
+            --changed \
+            --continue-on-error \
+            --parallel 3 \
+            -- \
+            terraform apply -input=false -lock=false -auto-approve plan.tfplan
