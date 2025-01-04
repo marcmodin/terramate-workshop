@@ -11,9 +11,8 @@ In this section, you'll manage your Terraform environment by adding new stacks, 
 
 Before starting Part 4, ensure your feature branch is up-to-date with the latest changes from the `main` branch.
 
-```bash
-git merge main
-```
+> [!WARNING]
+> Since you will basically created a new git repository and included all branches, branches are considered unrelated and lack shared history between them. As such you need to `git merge main --allow-unrelated-histories` to merge main into the branch you are working on.
 
 ### Review Workflow Files
 
