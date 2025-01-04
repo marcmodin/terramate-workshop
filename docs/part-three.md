@@ -121,20 +121,21 @@ git add .
 
 3. **Commit and Merge Changes Back to Main:**
 
-   After successfully deploying, commit your changes and merge them back to the main branch to ensure the remote repository is up-to-date.
+   After successfully deploying, commit your changes and merge them back to the main branch to ensure the remote repository is up-to-date. (this can be done by opening a pull request instead!)
 
    ```bash
    git add .
    git commit -m "chore: initialize and deploy all stacks except bootstrap"
    git checkout main
    git merge workshop/part-3
+   git push origin main
    ```
 
 ### Test Change Detection
 
 1. **Add a New Stack:**
 
-   To test Terramate's change detection, add a new stack to your monorepo.
+   To test Terramate's change detection, create a new branch and add a new stack to your monorepo.
 
    ```bash
    terramate create live/prod/account-a/eu-north-1/ec2
