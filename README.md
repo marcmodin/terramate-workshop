@@ -21,6 +21,9 @@ In this workshop, you will:
 > [!NOTE]
 > Each step of the workshop includes detailed instructions (`docs/`) and examples to help you understand and apply the concepts effectively. Whether you are new to Terramate or looking to enhance your Terraform management skills, this workshop will provide you with the knowledge and tools you need to succeed.
 
+> [!NOTE]
+> For now this workshop does not cover the Terramate Cloud offering!
+
 ## How to Follow the Workshop
 
 To ensure that each participant has the correct structure to complete each step, the required files and directories for each part of the workshop are contained in their own branch within the git repository.
@@ -44,7 +47,7 @@ To ensure that each participant has the correct structure to complete each step,
 To switch to the appropriate branch for each part of the workshop, use the following commands:
 
 > [!WARNING]
-> Since you will basically create a new git repository, all branches are considered unrelated and lack shared history between the branches. As such you need to `git merge main --allow-unrelated-histories` to merge main into the branch you are working on.
+> Since you will basically created a new git repository and included all branches, branches are considered unrelated and lack shared history between them. As such you need to `git merge main --allow-unrelated-histories` to merge main into `workshop/part-3` and `workshop/part-4` branches.
 
 4. **Add Terramate to an Existing Terraform Project**:
 
