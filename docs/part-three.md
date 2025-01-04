@@ -7,6 +7,9 @@ In this section, you'll work with a scalable Terraform monorepo, leveraging Terr
 
 ## Instructions
 
+> [!WARNING]
+> Since you will basically created a new git repository and included all branches, branches are considered unrelated and lack shared history between them. As such you need to `git merge main --allow-unrelated-histories` to merge main into the branch you are working on.
+
 ### Setup AWS Account Configuration
 
 In order for you to run Terraform commands, update the `account_id` to an AWS account you own and set your AWS credentials with appropriate permissions.
@@ -71,7 +74,7 @@ Learn more about orchestration [here](https://terramate.io/docs/cli/orchestratio
    terramate --chdir live/prod/account-a/bootstrap/remote-state run -- terraform init -migrate-state
 
    git add .
-   git commit -m "feat: deploy remote-state bucket to prod account-a"
+   git commit -m "feat: generate all, deploy remote-state bucket to prod account-a"
    ```  
 
   > [!TIP]
@@ -94,6 +97,7 @@ Verify the execution order:
 
 ```bash
 terramate list --run-order
+git add .
 ```
 
 ### Initialize and Deploy Other Stacks
@@ -123,7 +127,7 @@ terramate list --run-order
    git add .
    git commit -m "chore: initialize and deploy all stacks except bootstrap"
    git checkout main
-   git merge your-feature-branch
+   git merge workshop/part-3
    ```
 
 ### Test Change Detection
