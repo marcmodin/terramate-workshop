@@ -6,9 +6,12 @@ In this section, you'll integrate Terramate into your existing Terraform setup a
 
 Assume you a live Terraform production environment with resources deployed in one account across two regions. Let's see how easily Terramate can manage different states.
 
+> [!WARNING]
+> Since you will basically created a new git repository and included all branches, branches are considered unrelated and lack shared history between them. As such you need to `git merge main --allow-unrelated-histories` to merge main into the branch you are working on.
+
 ### Initialize Stacks
 
-Initialize Terramate for all Terraform configurations: <https://terramate.io/docs/cli/reference/cmdline/create>
+Initialize Terramate for all Terraform configurations: <https://terramate.io/docs/cli/reference/cmdline/create#import-existing-terraform-root-modules>.
 
 ```bash
 terramate create --all-terraform
@@ -24,7 +27,7 @@ List all stacks: <https://terramate.io/docs/cli/reference/cmdline/list>
 terramate list
 ```
 
-Add tags to the VPC stacks by updating the `stack.tm.hcl`:
+Add tags to the VPC stacks by updating the `stack.tm.hcl` so you can filter by tags later:
 
 ```hcl
 stack {
@@ -58,18 +61,53 @@ terramate experimental clone live/prod/account-a/eu-north-1/security-groups live
 
 Add additional tags to the cloned stacks as needed.
 
+### Order of Execution
+
+Control the execution order of stacks. Ensure the `security-group` stack runs after the `vpc` stack by adding the `after` attribute. <https://terramate.io/docs/cli/stacks/configuration#explicit-order-of-execution>
+
+```hcl
+stack {
+  ...
+  after = [
+    "tag:vpc",
+  ]
+}
+```
+
+Verify the execution order:
+
+```bash
+terramate list --run-order
+```
+
+### Change Detection
+
+<https://terramate.io/docs/cli/change-detection/>
+
+List changed stacks:
+
+```bash
+terramate list --changed 
+```
+
+Show the reason why a stack has changed:
+
+```bash
+terramate list --changed --why
+```
+
 ### Run Commands
 
-Run an arbitrary command against all stacks: <https://terramate.io/docs/cli/reference/cmdline/run>
+You can run any run any arbitrary command against all stacks: <https://terramate.io/docs/cli/reference/cmdline/run> not just terraform.
 
 ```bash
 terramate run -- pwd
 ```
 
-If you have untracked changes, [disabled safeguards](https://terramate.io/docs/cli/orchestration/safeguards) or add your changes momentarily:
+If you have untracked changes, [disabled safeguards](https://terramate.io/docs/cli/orchestration/safeguards) or commit your changes momentarily:
 
 ```bash
-terramate run --disable-safeguards=all -- pwd
+terramate run --disable-safeguards=all --changed -- pwd
 ```
 
 Run commands on stacks with specific tags:
@@ -78,16 +116,14 @@ Run commands on stacks with specific tags:
 terramate run --tags aws:vpc --disable-safeguards=all -- pwd
 ```
 
-Run commands only on changed stacks:
+#### Parallel Execution Built-in
+
+<https://terramate.io/docs/cli/orchestration/parallel-execution#run-a-command-in-stacks-in-parallel>
+
+Run the two vpc stacks in parallel, but before the security-groups
 
 ```bash
-terramate run --disable-safeguards=all --changed -- pwd
-```
-
-View unmerged changes:
-
-```bash
-terramate list --changed --why
+terramate run --disable-safeguards=all --parallel 2 -- pwd
 ```
 
 ## Next Step
