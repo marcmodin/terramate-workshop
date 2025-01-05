@@ -6,6 +6,9 @@ In this section, you'll organize and refactor your Terraform codebase for better
 
 Assume you have a live Terraform production environment with multiple stacks deployed to one account across two regions. You need to centrally update Terraform and provider version constraints and ensure new stacks have correctly configured backends (state buckets don't exist yet).
 
+> [!WARNING]
+> Since you will basically created a new git repository and included all branches, branches are considered unrelated and lack shared history between them. As such you need to `git merge main --allow-unrelated-histories` to merge main into the branch you are working on.
+
 ---
 
 Instead of statically defining files like `terraform.tf`, `providers.tf`, and `backend.tf`, you can generate them to simplify updates across a larger environment.

@@ -80,26 +80,6 @@ Learn more about orchestration [here](https://terramate.io/docs/cli/orchestratio
   > [!TIP]
   > Consider creating a Terramate script to automate bucket creation, tag removal, backend generation, and state reinitialization 🧠
 
-### Order of Execution
-
-Control the execution order of stacks. Ensure the `security-group` stack runs after the `vpc` stack by adding the `after` attribute. <https://terramate.io/docs/cli/stacks/configuration#explicit-order-of-execution>
-
-```hcl
-stack {
-  ...
-  after = [
-    "tag:vpc",
-  ]
-}
-```
-
-Verify the execution order:
-
-```bash
-terramate list --run-order
-git add .
-```
-
 ### Initialize and Deploy Other Stacks
 
 1. **Initialize All Other Stacks:**
