@@ -6,14 +6,15 @@ In this section, you'll organize and refactor your Terraform codebase for better
 
 Assume you have a live Terraform production environment with multiple stacks deployed to one account across two regions. You need to centrally update Terraform and provider version constraints and ensure new stacks have correctly configured backends (state buckets don't exist yet).
 
-> [!WARNING]
-> Since you will basically created a new git repository and included all branches, branches are considered unrelated and lack shared history between them. As such you need to `git merge main --allow-unrelated-histories` to merge main into the branch you are working on.
-
 ---
 
 Instead of statically defining files like `terraform.tf`, `providers.tf`, and `backend.tf`, you can generate them to simplify updates across a larger environment.
 
-### Show Currently Calculated Values
+### Generate Configurations
+
+<https://terramate.io/docs/cli/code-generation/generate-hcl>
+
+In the `mixins` directory, you'll find files with `generate_hcl` blocks. Additionally, various config files represent `environment`, `account`, and `region` values used by Terramate to generate HCL. The global config `global.tm.hcl` is located at the root directory.
 
 View all values Terramate recognizes for each stack. Valid commands include `generate-origins`, `globals`, `metadata`, and `runtime-env`.
 
@@ -22,13 +23,7 @@ terramate debug show globals
 terramate debug show metadata --tags aws:vpc
 ```
 
-### Generate Configurations
-
-<https://terramate.io/docs/cli/code-generation/generate-hcl>
-
-In the `mixins` directory, you'll find files with `generate_hcl` blocks. Additionally, various config files represent `environment`, `account`, and `region` values used by Terramate to generate HCL. The global config `global.tm.hcl` is located at the root directory.
-
-Include an import block in the global config or create a new `*.tm.hcl` file in the root:
+The values are available in the Terramate graph. However, to use them with `generate`, include an import block in the global config or create a new `*.tm.hcl` file in the root:
 
 ```hcl
 import {
@@ -69,7 +64,7 @@ For advanced usage, explore the experimental `tmgen` feature or develop your own
 
 ### Considerations
 
-While Terramate's generate feature is powerful, you can introduce complexity and potential over-engineering. We like Terramate since it doesn't dictate how to you write or stucture your terraform unlike contemporary tools and would recommend a simplistic approach.
+While Terramate's generate feature is powerful, you can introduce complexity and potential over-engineering. We like Terramate since it doesn't dictate how to you write or structure your terraform unlike contemporary tools.
 
 ## Next Step
 
