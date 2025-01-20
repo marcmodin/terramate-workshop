@@ -27,13 +27,13 @@ List all stacks: <https://terramate.io/docs/cli/reference/cmdline/list>
 terramate list
 ```
 
-Add tags to the VPC stacks by updating the `stack.tm.hcl` so you can filter by tags later:
+Add tags to the VPC stacks by updating the `stack.tm.hcl` so you can filter by tags later.
 
 ```hcl
 stack {
   ...
   tags = [
-    "aws",
+    "euc1",
     "vpc"
   ]
 }
@@ -42,7 +42,7 @@ stack {
 Now, filter stacks by tags:
 
 ```bash
-terramate list --tags aws:vpc
+terramate list --tags euc1:vpc
 ```
 
 ### Create Stacks

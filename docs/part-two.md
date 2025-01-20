@@ -20,7 +20,7 @@ View all values Terramate recognizes for each stack. Valid commands include `gen
 
 ```bash
 terramate debug show globals
-terramate debug show metadata --tags aws:vpc
+terramate debug show metadata --tags euc1:vpc
 ```
 
 The values are available in the Terramate graph. However, to use them with `generate`, include an import block in the global config or create a new `*.tm.hcl` file in the root:
@@ -50,7 +50,7 @@ Update the required Terraform version and regenerate configurations:
 version = "1.9.5" > "1.10.0"
 ```
 
-To update the version only in a specific region (e.g., `eu-north-1`), add the following to an existing `*.tm.hcl` or create a new config:
+To update the version only in a specific region (e.g., `eu-north-1`), add the following to an existing config or stack or create a new `*.tm.hcl`:
 
 ```hcl
 # e.g., /live/prod/eu-north-1/region.tm.hcl
