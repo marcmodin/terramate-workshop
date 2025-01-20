@@ -20,7 +20,7 @@ View all values Terramate recognizes for each stack. Valid commands include `gen
 
 ```bash
 terramate debug show globals
-terramate debug show metadata --tags aws:vpc
+terramate debug show metadata --tags euc1:vpc
 ```
 
 The values are available in the Terramate graph. However, to use them with `generate`, include an import block in the global config or create a new `*.tm.hcl` file in the root:
