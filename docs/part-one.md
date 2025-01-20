@@ -39,7 +39,13 @@ stack {
 }
 ```
 
-Now, filter stacks by tags:
+Now, filter stacks by tags (one or many):
+
+```bash
+terramate list --tags euc1:vpc
+```
+
+Or a combination
 
 ```bash
 terramate list --tags euc1:vpc
@@ -113,7 +119,7 @@ terramate run --disable-safeguards=all --changed -- pwd
 Run commands on stacks with specific tags:
 
 ```bash
-terramate run --tags aws:vpc --disable-safeguards=all -- pwd
+terramate run --tags euc1:vpc --disable-safeguards=all -- pwd
 ```
 
 #### Parallel Execution Built-in
