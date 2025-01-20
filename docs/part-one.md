@@ -33,16 +33,22 @@ Add tags to the VPC stacks by updating the `stack.tm.hcl` so you can filter by t
 stack {
   ...
   tags = [
-    "aws",
+    "euc1",
     "vpc"
   ]
 }
 ```
 
-Now, filter stacks by tags:
+Now, filter stacks by tags (one or many):
 
 ```bash
-terramate list --tags aws:vpc
+terramate list --tags euc1:vpc
+```
+
+Or a combination
+
+```bash
+terramate list --tags vpc --exclude-tags eun1
 ```
 
 ### Create Stacks
@@ -113,7 +119,7 @@ terramate run --disable-safeguards=all --changed -- pwd
 Run commands on stacks with specific tags:
 
 ```bash
-terramate run --tags aws:vpc --disable-safeguards=all -- pwd
+terramate run --tags euc1:vpc --disable-safeguards=all -- pwd
 ```
 
 #### Parallel Execution Built-in
